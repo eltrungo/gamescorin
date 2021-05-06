@@ -8,6 +8,7 @@ INSERT INTO `nba_team_game`
 		(SELECT sum(npg2.`PTS`)
 			FROM `nba_player_game` AS npg2
 			WHERE npg.`Game_Date`= npg2.`Game_Date` AND npg.`Oppo` = npg2.`Team`),
+		NULL,
 		`Result`,
 		count(`NBA_playerId`),
 		NULL,NULL,NULL,
@@ -18,7 +19,9 @@ INSERT INTO `nba_team_game`
     	ORDER BY `Game_Date` ASC, `Team` ASC;
 
 UPDATE `nba_team_game`
-	SET `Team_Game` = if(`Away` = "",
+	SET 
+	`Score_diff` = (`Team_Score` - `Oppo_Score`),
+	`Team_Game` = if(`Away` = "",
 		concat(`Team`,"_",`Game_Date`,"_(",`Oppo`,")"),
 		concat(`Team`,"_",`Game_Date`,"_(@",`Oppo`,")")),
         `Game_Name` = if(`Away` = "",
